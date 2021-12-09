@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {COLORS, icons, SIZES, images, FONTS} from '../constants';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const initialCurrentLocation = {
     streetName: 'Kuching',
     gps: {
@@ -339,6 +339,16 @@ const Home = () => {
     setSelectedCategories(category);
   };
 
+  const getCategoryNameById = Id => {
+    let category = categories.filter(a => a.id == Id);
+
+    if (category.length > 0) {
+      return category[0].name;
+    } else {
+      return '';
+    }
+  };
+
   const renderHeader = () => {
     return (
       <View style={{flexDirection: 'row', height: 50}}>
@@ -434,7 +444,9 @@ const Home = () => {
             style={{
               marginTop: SIZES.padding,
               color:
-                selectedCategories?.id === item.id ? COLORS.white : COLORS.black,
+                selectedCategories?.id === item.id
+                  ? COLORS.white
+                  : COLORS.black,
               ...FONTS.body5,
             }}>
             {item.name}
@@ -462,18 +474,89 @@ const Home = () => {
     const renderItem = ({item}) => (
       <TouchableOpacity
         style={{marginBottom: SIZES.padding * 2}}
-        // onPress
-      >
+        onPress={() =>
+          navigation.navigate('Restaurant', {
+            item,
+            currentLocation,
+          })
+        }>
         {/* <Image /> */}
-        <View>
+        <View style={{marginBottom: SIZES.padding}}>
           <Image
             source={item.photo}
             resizeMode="cover"
             style={{width: '100%', height: 200, borderRadius: SIZES.radius}}
           />
-          <View>
-            
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              height: 50,
+              width: SIZES.width * 0.3,
+              borderTopRightRadius: SIZES.radius,
+              borderBottomLeftRadius: SIZES.radius,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: COLORS.white,
+              ...styles.shadow,
+            }}>
+            <Text style={{...FONTS.h4}}>{item.duration}</Text>
           </View>
+        </View>
+        <Text style={{...FONTS.body2}}>{item.name}</Text>
+        <View
+          style={{
+            marginTop: SIZES.padding,
+            flexDirection: 'row',
+          }}>
+          <Image
+            source={icons.star}
+            style={{
+              height: 20,
+              width: 20,
+              tintColor: COLORS.primary,
+              marginRight: 10,
+            }}
+          />
+          <Text
+            style={{
+              ...FONTS.body3,
+            }}>
+            {item.rating}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginLeft: 10,
+          }}>
+          {item.categories.map(categoryID => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}
+                key={categoryID}>
+                <Text style={{...FONTS.body3}}>
+                  {getCategoryNameById(categoryID)}
+                </Text>
+                <Text style={{...FONTS.h3, color: COLORS.darkgray}}> . </Text>
+              </View>
+            );
+          })}
+          {[1, 2, 3].map(priceRating => (
+            <Text
+              key={priceRating}
+              style={{
+                ...FONTS.body3,
+                color:
+                  priceRating <= item.priceRating
+                    ? COLORS.black
+                    : COLORS.darkgray,
+              }}>
+              $
+            </Text>
+          ))}
         </View>
       </TouchableOpacity>
     );
