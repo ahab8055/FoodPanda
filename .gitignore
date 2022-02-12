@@ -58,3 +58,6 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+.vscode
+package-lock.json
+yarn.lock

@@ -63,8 +63,7 @@ const Restaurant = ({route, navigation}) => {
   };
 
   const getBasketItemCount = () => {
-    let itemCount = orderItems.reduce((a, b) => a + (b.qty || 0), 0);
-    return itemCount;
+    return orderItems.reduce((a, b) => a + (b.qty || 0), 0);
   };
 
   const sumOrder = () => {
